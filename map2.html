@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>US 2020 COVID-19 Cases</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #description {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            max-width: 300px;
+            background-color: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            z-index: 1;
+            color: black;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .dot-label {
+            vertical-align: middle;
+        }
+
+        .break {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="description">
+        <h2>Covid 19 cases in 2020</h2>
+        <p>This map visualizes the COVID-19 cases in the United States for the year 2020. Click on a circle to view the number of cases in that area.</p>
+    </div>
+    <div id="legend"></div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+
+        let map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v10',
+            center: [-100, 40],
+            zoom: 4,
+            minZoom: 2
+        });
+
+        const grades = [12000, 24000, 36000, 48000, 60000];
+        const colors = ['#ffeda0', '#feb24c', '#f03b20', '#bd0026', '#800026']; // Changed colors
+        const radii = [5, 10, 15, 20, 25];
+
+        map.on('load', () => {
+            map.addSource('counts', {
+                type: 'geojson',
+                data: 'assets/assets/us-covid-2020-counts (1).json'
+            });
+
+            map.addLayer({
+                'id': 'covid-point',
+                'type': 'circle',
+                'source': 'counts',
+                'paint': {
+                    'circle-radius': {
+                        'property': 'cases',
+                        'stops': [
+                            [grades[0], radii[0]],
+                            [grades[1], radii[1]],
+                            [grades[2], radii[2]],
+                            [grades[3], radii[3]],
+                            [grades[4], radii[4]]
+                        ]
+                    },
+                    'circle-color': {
+                        'property': 'cases',
+                        'stops': [
+                            [grades[0], colors[0]],
+                            [grades[1], colors[1]],
+                            [grades[2], colors[2]],
+                            [grades[3], colors[3]],
+                            [grades[4], colors[4]]
+                        ]
+                    },
+                    'circle-stroke-color': 'white',
+                    'circle-stroke-width': 1,
+                    'circle-opacity': 0.6
+                }
+            });
+
+            map.on('click', 'covid-point', (event) => {
+                new mapboxgl.Popup()
+                    .setLngLat(event.features[0].geometry.coordinates)
+                    .setHTML(`<strong>Cases:</strong> ${event.features[0].properties.cases}`)
+                    .addTo(map);
+            });
+
+            const legend = document.getElementById('legend');
+            var labels = ['<strong>Cases</strong>'];
+            var vbreak;
+
+            for (var i = 0; i < grades.length; i++) {
+                vbreak = grades[i];
+                dot_radii = 2 * radii[i];
+                labels.push(
+                    '<p class="break"><i class="dot" style="background:' + colors[i] + '; width: ' + dot_radii +
+                    'px; height: ' +
+                    dot_radii + 'px; "></i> <span class="dot-label" style="top: ' + dot_radii / 2 + 'px;">' + vbreak +
+                    '</span></p>');
+            }
+
+            legend.innerHTML = labels.join('');
+        });
+    </script>
+</body>
+
+</html>
+
