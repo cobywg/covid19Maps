@@ -1,13 +1,13 @@
 # COVID-19 Choropleth Map
 The COVID-19 Choropleth Map project aims to visualize the rates of COVID-19 cases across different regions in the United States for the year 2020. This interactive map provides users with an intuitive interface to explore COVID-19 rates per 1,000 people at the county level. By hovering over each county, users can view detailed information about the COVID-19 rate, allowing for a better understanding of the geographical distribution of the pandemic.
 [![Alt Text](img/img2.png)](link_url)
-Link to map: ()
+Link to map: https://cobywg.github.io/covid19Maps/map1
 
 
 # Proportional Symbol Map
 The Proportional Symbol Map project visualizes the distribution of COVID-19 cases across the United States using proportional symbols. Each symbol on the map represents a geographic location, with the size of the symbol proportional to the number of COVID-19 cases in that area. Users can interact with the map to explore the concentration of cases in different regions, gaining insights into the severity and spread of the pandemic.
 [![Alt Text](img/img1.png)](link_url)
-Link to map: ()
+Link to map: https://cobywg.github.io/covid19Maps/map2
 
 ## Primary Functions
 - **Interactive Map**: Users can navigate the map by zooming in/out and panning to explore different regions.
